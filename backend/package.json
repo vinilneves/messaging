@@ -1,0 +1,10 @@
+{
+  "name": "messaging",
+  "version": "1.0.0",
+  "description": "Esse projeto serve de apoio ao treinamento sobre messageria, que dará base para o streaming.",
+  "main": "src/index.js",
+  "repository": "https://github.com/vinilneves/messaging",
+  "author": "Vinícius Neves",
+  "license": "GPLv3",
+  "private": true
+}
