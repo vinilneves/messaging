@@ -8,7 +8,6 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-monokai";
 
-
 const INVISIBILITY_SECONDS = 15;
 const DATE_MASK = "DD/MM HH:mm:ss";
 
@@ -147,7 +146,7 @@ function MessageConsumer(props) {
     if (editorInstance && message?.body) {
       editorInstance.setValue(JSON.stringify(message, null, 2))
     }
-  }, [message])
+  }, [message, editorInstance])
 
   const clear = () => {
     if (editorInstance) {
@@ -173,6 +172,7 @@ function MessageConsumer(props) {
   }
 
   const handleConsume = () => {
+    setShowMessageCommitError(false);
     const consumedMessage = onConsume();
     if (consumedMessage) {
       setMessage(consumedMessage);
@@ -256,8 +256,13 @@ function App() {
   };
 
   const onConsumerCommit = (id) => {
-    queueService.commit(id)
-    updateList();
+    if (queueService.commit(id)) {
+      updateList();
+
+      return true;
+    }
+
+    return false;
   };
 
   const onConsume = () => {
