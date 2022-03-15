@@ -8,7 +8,7 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-monokai";
 
-const INVISIBILITY_SECONDS = 5;
+const INVISIBILITY_SECONDS = 15;
 const DATE_MASK = "DD/MM HH:mm:ss";
 
 const queueService = new QueueService({ seconds: INVISIBILITY_SECONDS });
@@ -260,7 +260,7 @@ function App() {
   };
 
   const onCommit = (id) => {
-    if(queueService.commit(id)) {
+    if(queueService.commit(id, true)) {
       updateList();
       return true;
     }

@@ -52,7 +52,7 @@ class QueueService {
     return null;
   }
 
-  commit(id) {
+  commit(id, force) {
     const now = moment();
     
     const byId = (id) => (message) => message.id === id;
@@ -60,7 +60,7 @@ class QueueService {
 
     const messageIndex = this._messages.findIndex(byId(id));
 
-    if (messageIndex > -1 && isInvisible(this._messages[messageIndex])) {
+    if (messageIndex > -1 && (force || isInvisible(this._messages[messageIndex]))) {
       return !!this._messages.splice(messageIndex, 1);
     }
 
