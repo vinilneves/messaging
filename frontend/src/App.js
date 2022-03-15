@@ -8,7 +8,7 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-monokai";
 
-const INVISIBILITY_SECONDS = 15;
+const INVISIBILITY_SECONDS = 5;
 const DATE_MASK = "DD/MM HH:mm:ss";
 
 const queueService = new QueueService({ seconds: INVISIBILITY_SECONDS });
@@ -70,10 +70,11 @@ function MessageList(props) {
       <table>
         <thead>
           <tr>
-            <th>Id</th>
-            <th>Postada em</th>
-            <th>Visível após</th>
-            <th></th>
+            <th width={200}>Id</th>
+            <th width={200}>Postada em</th>
+            <th width={200}>Visível após</th>
+            <th width={200}>Visibilidade</th>
+            <th width={200}></th>
           </tr>
         </thead>
         <tbody>
@@ -104,7 +105,8 @@ function Message(props) {
   const now = moment();
   const messageVisibleAfter = moment(message.visibleAfter, DATE_MASK);
 
-  const color = now.isAfter(messageVisibleAfter) ? "inherit": "grey";
+  const secondsLeft = messageVisibleAfter.diff(now, 'seconds')
+  const color = secondsLeft <= 0 ? "inherit" : "grey";
 
   return (
     <tr style={{ color }}>
@@ -112,11 +114,22 @@ function Message(props) {
         <>
           <td>{message.id}</td>
           <td>{message.postedAt}</td>
-          <td>{message.visibleAfter}</td>
           <td>
-            <a href={`#commit_${message.id}`} onClick={onClickCommit}>
-              Commit
-            </a>
+            {message.visibleAfter}
+          </td>
+          <td width={200}>
+            {secondsLeft > 0 ? (
+              <span style={{ color: 'red'}}>{`Visível em ${secondsLeft} segundos`} &nbsp;</span>
+            ) : (
+              <span>{`Visível`}</span>
+            )}
+          </td>
+          <td>
+            {secondsLeft <= 0 && (
+              <a href={`#commit_${message.id}`} onClick={onClickCommit}>
+                Commit
+              </a>
+            )}
           </td>
         </>
       )}
@@ -209,7 +222,7 @@ function MessageConsumer(props) {
 
       {  
         (showMessageCommitError && <div>
-          <em>Mensagem já commitada!</em>
+          <em>Erro ao commitar a mensagem!</em>
         </div>)
       }
       <div>

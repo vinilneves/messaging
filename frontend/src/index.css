@@ -73,6 +73,8 @@ tbody {
 .tableWrapper {
   padding: 10px;
   box-shadow: 3px 3px 12px 0px #aaa;
+  height: 150px;
+  overflow: auto;
 }
 
 section#nuvem {

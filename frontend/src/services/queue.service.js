@@ -53,13 +53,15 @@ class QueueService {
   }
 
   commit(id) {
+    const now = moment();
+    
     const byId = (id) => (message) => message.id === id;
+    const isInvisible = (message) => now.isBefore(message.visibleAfter);
 
     const messageIndex = this._messages.findIndex(byId(id));
 
-    if (messageIndex > -1) {
-      this._messages.splice(messageIndex, 1);
-      return true;
+    if (messageIndex > -1 && isInvisible(this._messages[messageIndex])) {
+      return !!this._messages.splice(messageIndex, 1);
     }
 
     return false;
